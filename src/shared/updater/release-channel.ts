@@ -22,7 +22,10 @@ export const RELEASE_CHANNEL_LABELS: Readonly<Record<ReleaseChannel, string>> = 
 export const HOURLY_RELEASE_REPO = 'stablyai/orca-hourly'
 export const DAILY_RELEASE_REPO = 'stablyai/orca-daily'
 export const ADHOC_RELEASE_REPO = 'stablyai/orca-adhoc'
-export const MAIN_RELEASE_REPO = 'stablyai/orca'
+declare const ORCA_CUSTOM_RELEASE_REPO: string | null
+const customReleaseRepo =
+  typeof ORCA_CUSTOM_RELEASE_REPO === 'string' ? ORCA_CUSTOM_RELEASE_REPO : null
+export const MAIN_RELEASE_REPO = customReleaseRepo ?? 'stablyai/orca'
 
 /** The dev channels, each published to its own repo rather than the main one. */
 const DEDICATED_REPO_CHANNELS = ['hourly', 'daily', 'adhoc'] as const
@@ -84,7 +87,7 @@ export function requiresManualDevChannelInstall(options: {
 }
 
 export function getReleaseRepoForChannel(channel: ReleaseChannel): string {
-  return CHANNEL_RELEASE_REPOS[channel]
+  return customReleaseRepo ?? CHANNEL_RELEASE_REPOS[channel]
 }
 
 export function normalizeTagToVersion(tag: string): string {
